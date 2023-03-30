@@ -32,7 +32,6 @@ class LinearBottleNeck(nn.Module):
         self.out_channels = out_c
 
     def forward(self, x):
-        # print('before shortcut x shape is', x.shape)
         residual = self.residual(x)
         # ('before shortcut residual shape is', residual.shape)
         if self.stride == 1 and self.in_channels == self.out_channels:
