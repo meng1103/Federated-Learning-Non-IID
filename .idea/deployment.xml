@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="jiangru@114.215.85.130:6172">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="jiangru@114.215.85.130:6172 (2)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="jiangru@114.215.85.130:6172 (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/jiangru/mxt" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@10.105.94.108:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/mxt" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@10.105.94.108:22 (2)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/sta208/wr" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@10.105.94.108:22 (3)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/sta208/mxt" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@10.105.94.108:22 (4)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/sta208/mxt" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="root@192.168.137.2:22">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/mxtfrl" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
