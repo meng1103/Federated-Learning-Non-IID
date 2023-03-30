@@ -6,7 +6,7 @@ Federated Learning Algorithm (Pytorch) : FedAvg, FedProx, MOON, SCAFFOLD, FedDyn
 pytorch >= 1.6
 
 ## model
-cnn lenet mobilenet resnet googlenet
+CNN, LeNet MobileNet ResNet GoogLeNet
 
 ## dataset 
 MNIST CIFAR10 CIFAR100
