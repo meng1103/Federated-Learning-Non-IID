@@ -15,7 +15,6 @@ import logging
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-# 莎士比亚数据集数据处理
 class DatasetSplit(Dataset):
     def __init__(self, dataset, idxs):
         self.dataset = dataset
@@ -64,21 +63,31 @@ class ClientUpdate(object):
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = MobileNetV2(num_classes=self.args.num_classes).to(device)
             clients_net = [MobileNetV2(num_classes=self.args.num_classes).to(device) for _ in range(self.args.num_clients)]
+        else:
+            exit("Error: no model")
 
-        # MOON================================================================================================================
-        elif self.args.model == 'mooncnn' and self.args.dataset == 'cifar_LDA':
+
+        for model in clients_net:
+            model.load_state_dict(global_net.state_dict())
+
+        optimizer = [torch.optim.Adam(model.parameters(), lr=self.args.lr) for model in clients_net]
+        return global_net, clients_net, optimizer
+
+    def get_moon_model(self, ):
+        global_net, clients_net = None, None
+        if self.args.model == 'cnn' and self.args.dataset == 'cifar_LDA':
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = MOONCNNCifar().to(device)
             clients_net = [MOONCNNCifar().to(device) for _ in range(self.args.num_clients)]
-        elif self.args.model == 'mooncnn' and self.args.dataset == 'cifar_rate':
+        elif self.args.model == 'cnn' and self.args.dataset == 'cifar_rate':
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = MOONCNNCifar().to(device)
             clients_net = [MOONCNNCifar().to(device) for _ in range(self.args.num_clients)]
-        elif self.args.model == 'moonlenet' and (self.args.dataset == 'cifar_rate' or self.args.dataset == 'cifar_LDA'):
+        elif self.args.model == 'lenet' and (self.args.dataset == 'cifar_rate' or self.args.dataset == 'cifar_LDA'):
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = MOONLeNet().to(device)
             clients_net = [MOONLeNet().to(device) for _ in range(self.args.num_clients)]
-        elif self.args.model == 'moonmobilenet' and self.args.dataset == 'cifar100_LDA':
+        elif self.args.model == 'mobilenet' and self.args.dataset == 'cifar100_LDA':
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = MOONMobileNetV2().to(device)
             clients_net = [MOONMobileNetV2().to(device) for _ in range(self.args.num_clients)]
@@ -219,8 +228,6 @@ class ClientUpdate(object):
                 for w, w_t in zip(clients_net.parameters(), global_net.parameters()):
                     proximal_term += (w - w_t).norm(2)
 
-                # output = output.to(torch.float32)
-                # target = target.to(torch.float32)
                 loss = self.loss_func(output, target) + (self.args.mu / 2) * proximal_term
                 loss.backward()
                 optimizer.step()
@@ -244,8 +251,8 @@ class ClientUpdate(object):
                 target.requires_grad = False
                 target = target.long()
 
-                _, pro1, out = clients_net(data)  # h, x, y
-                _, pro2, _ = global_net(data)  # h, x, y
+                _, pro1, out = clients_net(data)
+                _, pro2, _ = global_net(data)
                 if len(out.shape) == 1:
                     out = torch.unsqueeze(out, dim=0)
                 posi = cos(pro1, pro2)
@@ -256,7 +263,6 @@ class ClientUpdate(object):
                 nega = cos(pro1, pro3)
                 logits = torch.cat((logits, nega.reshape(-1,1)), dim=1)
 
-                # previous_net.to('cpu')
 
                 logits /= self.args.temperature
                 labels = torch.zeros(data.size(0)).cuda().long()
