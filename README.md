@@ -4,6 +4,7 @@ Federated Learning Algorithm (Pytorch) : FedAvg, FedProx, MOON, SCAFFOLD, FedDyn
 
 # Requirements
 pytorch >= 1.6
+
 torchvision >= 0.9.0
 
 ## model
