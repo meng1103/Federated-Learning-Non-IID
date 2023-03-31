@@ -1,16 +1,9 @@
-import copy
 import os.path
-import random
 import numpy as np
-import matplotlib.pyplot as plt
-import torch
-
-from models.Clients import ClientUpdate
-from models.Getdataset import GetDataSet
-from config import args_parser
 
 
-def fedprox():
+
+def fedprox(args, FL, getdata):
     acc_list = []
     train_loss_list = []
     test_loss_list = []
@@ -38,7 +31,7 @@ def fedprox():
         FL.updata_model(global_net, clients_net)
 
 
-        test_loss, accuracy = FL.test(global_net, data_set.test_loader)
+        test_loss, accuracy = FL.test(global_net, getdata.test_loader)
         train_loss /= args.num_selected
         accuracy = float(accuracy)
 
@@ -62,14 +55,5 @@ def fedprox():
         accfile.close()
 
 
-
-if __name__ == '__main__':
-    random.seed(1)
-    torch.manual_seed(1)
-    args = args_parser()
-    FL = ClientUpdate(args)
-    data_set = GetDataSet(args)
-
-    fedprox()
 
 
