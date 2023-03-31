@@ -15,5 +15,5 @@ MNIST, CIFAR10, CIFAR100
 
 ## Usage
 ```
-python main.py --method fedalign --client_number 16 --thread_number 16 --comm_round 25 --lr 0.01 --epochs 20 --width 0.25 --mu 0.45 --data_dir data/cifar100
+python main.py --FL fedavg --train_bs 50 --train_ep 5 --epoch 500 --non_alpha 0.5 --model lenet --dataset cifar_LDA --num_selected 10 --num_clients 100
 ```
