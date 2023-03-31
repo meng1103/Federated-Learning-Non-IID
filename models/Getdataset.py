@@ -103,7 +103,7 @@ class GetDataSet(object):
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
             ])
             self.train_data = datasets.CIFAR10('../data', train=True, download=False, transform=train_transform)
-            test_data = datasets.CIFAR10('../data', train=False, download=False, transform=test_transform)
+            test_data = datasets.CIFAR10('../data', train=True, download=False, transform=test_transform)
 
             self.test_loader = DataLoader(test_data, batch_size=args.test_bs, shuffle=True)
             self.train_size = self.train_data.data.shape[0]
@@ -130,13 +130,13 @@ class GetDataSet(object):
             exit("Error: Getdataset->LDADataSetConstruct")
 
         if args.dataset == 'cifar_LDA' and args.non_alpha == 1.0:
-            train_split_dict = cifar_LDA1(args)    # 100个
+            train_split_dict = cifar_LDA1(args)
             self.train_dict = train_split_dict
         elif args.dataset == 'cifar_LDA' and args.non_alpha == 0.1:
-            train_split_dict = cifar_LDA01(args)    # 100个
+            train_split_dict = cifar_LDA01(args)
             self.train_dict = train_split_dict
         elif args.dataset == 'cifar_LDA' and args.non_alpha == 0.5:
-            train_split_dict = cifar_LDA05(args)    # 100个
+            train_split_dict = cifar_LDA05(args)
             self.train_dict = train_split_dict
         elif args.dataset == 'cifar100_LDA' and args.non_alpha == 0.5:
             train_split_dict = cifar100_LDA05(args)
