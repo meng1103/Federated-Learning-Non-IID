@@ -1,20 +1,13 @@
 import copy
 import os.path
-import random
-import numpy as np
-import matplotlib.pyplot as plt
-import torch
-
-from models.Clients import ClientUpdate
-from models.Getdataset import GetDataSet
-from config import args_parser
 import gc
 from models.Nets import *
 from models.MobileNetV2 import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def fed_sacffold_train():
+
+def scaffold(args, FL, getdata):
     acc_list = []
     train_loss_list = []
     test_loss_list = []
@@ -26,17 +19,16 @@ def fed_sacffold_train():
     control_weights = control_global.state_dict()
 
     # model for local control varietes
-    if args.dataset == 'mnist_rate' or args.dataset == 'mnist_LDA':
+    if args.model == 'cnn' and (args.dataset == 'mnist_rate' or args.dataset == 'mnist_LDA'):
         local_controls = [CNNMnist().to(device) for _ in range(args.num_clients)]
-    elif args.dataset == 'cifar_rate' or args.dataset == 'cifar_LDA':
+    elif args.model == 'lenet' and (args.dataset == 'cifar_rate' or args.dataset == 'cifar_LDA'):
         local_controls = [LeNet5().to(device) for _ in range(args.num_clients)]
-    elif args.dataset == 'cifar100_rate' or args.dataset == 'cifar100_LDA':
+    elif args.model == 'mobilenet' and (args.dataset == 'cifar100_rate' or args.dataset == 'cifar100_LDA'):
         local_controls = [MobileNetV2().to(device) for _ in range(args.num_clients)]
     else:
         local_controls = None
-    # for k in range(len(clients_net)):
-    #     model = copy.deepcopy(clients_net[k])
-    #     local_controls.append(model)
+        exit("Error: local_controls = None")
+
     for net in local_controls:
         net.load_state_dict(control_weights)
 
@@ -51,11 +43,6 @@ def fed_sacffold_train():
         client_loader.append(client_loader_)
         test_loader = getdata.test_loader
 
-    # for i in range(len(client_loader)):
-    #     if i == 0:
-    #         print(i, '=======================================')
-    #         for j, (img, label) in enumerate(client_loader[i]):
-    #             print(label)
 
     for i in range(args.epoch):
         for ci in delta_c:
@@ -126,13 +113,3 @@ def fed_sacffold_train():
             accfile.write('\n')
         accfile.close()
 
-
-if __name__ == '__main__':
-    random.seed(1)
-    torch.manual_seed(1)
-    args = args_parser()
-    FL = ClientUpdate(args)
-    getdata = GetDataSet(args)
-
-
-    fed_sacffold_train()
