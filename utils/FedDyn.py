@@ -32,7 +32,6 @@ def feddyn(args, FL, getdata):
         test_loader = getdata.test_loader
         clients_prev_grads.append(init_prev_grads(clients_net[idx]))
 
-
     h = {
         key: torch.zeros(params.shape, device=device)
         for key, params in global_net.state_dict().items()
