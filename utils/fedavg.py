@@ -1,17 +1,8 @@
-import copy
 import os.path
-import random
 import numpy as np
-import matplotlib.pyplot as plt
-import torch
-
-from models.Clients import ClientUpdate
-from models.Getdataset import GetDataSet
-from config import args_parser
 
 
-
-def fed_train():
+def fedavg(args, FL, getdata):
     acc_list = []
     train_loss_list = []
     test_loss_list = []
@@ -62,14 +53,3 @@ def fed_train():
         accfile.close()
 
 
-
-if __name__ == '__main__':
-    random.seed(1)
-    torch.manual_seed(1)
-    args = args_parser()
-    FL = ClientUpdate(args)
-    getdata = GetDataSet(args)
-
-
-
-    fed_train()
