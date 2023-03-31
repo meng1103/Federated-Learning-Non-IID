@@ -1,13 +1,7 @@
-import copy
 import os.path
-import random
 import numpy as np
-import matplotlib.pyplot as plt
 import torch
 
-from models.Clients import ClientUpdate
-from models.Getdataset import GetDataSet
-from config import args_parser
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -20,7 +14,7 @@ def init_prev_grads(model):
             prev_grads = torch.cat((prev_grads, torch.zeros_like(param.view(-1))), dim=0)
     return prev_grads
 
-def feddyn_train():
+def feddyn(args, FL, getdata):
     acc_list = []
     train_loss_list = []
     test_loss_list = []
@@ -73,8 +67,6 @@ def feddyn_train():
         global_net.load_state_dict(new_parameters)
 
 
-
-
         FL.updata_model(global_net, clients_net)
         test_loss, accuracy = FL.test(global_net, test_loader)
         train_loss /= args.num_selected
@@ -100,13 +92,3 @@ def feddyn_train():
         accfile.close()
 
 
-
-
-if __name__ == '__main__':
-    random.seed(1)
-    torch.manual_seed(1)
-    args = args_parser()
-    FL = ClientUpdate(args)
-    getdata = GetDataSet(args)
-
-    feddyn_train()
