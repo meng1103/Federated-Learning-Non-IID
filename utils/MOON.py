@@ -1,22 +1,15 @@
 import copy
 import os.path
-import random
 import numpy as np
-import matplotlib.pyplot as plt
-import torch
-
-from models.Clients import ClientUpdate
-from models.Getdataset import GetDataSet
-from config import args_parser
 
 
-def MOON_train():
+def MOON(args, FL, getdata):
     acc_list = []
     train_loss_list = []
     test_loss_list = []
     print("----------fed----------")
     print("dataset：{}   rate:{}   ".format(args.dataset, args.rate))
-    global_net, clients_net, optimizer = FL.get_model()
+    global_net, clients_net, optimizer = FL.get_moon_model()
 
     previous_net = copy.deepcopy(clients_net)
     for i in range(len(previous_net)):
@@ -73,13 +66,5 @@ def MOON_train():
         accfile.close()
 
 
-if __name__ == '__main__':
-    random.seed(1)
-    torch.manual_seed(1)
-    args = args_parser()
-    FL = ClientUpdate(args)
-    getdata = GetDataSet(args)
 
-    args.model = 'moonlenet'
-    MOON_train()
 
