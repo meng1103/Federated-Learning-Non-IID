@@ -41,7 +41,7 @@ class ClientUpdate(object):
 
     def get_model(self, ):
         global_net, clients_net = None, None
-        if self.args.model == 'cnn' and (self.args.dataset == 'cifar' or self.args.dataset == 'cifar_rate'):
+        if self.args.model == 'cnn' and (self.args.dataset == 'cifar_LDA' or self.args.dataset == 'cifar_rate'):
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = CNNCifar().to(device)
             clients_net = [CNNCifar().to(device) for _ in range(self.args.num_clients)]
@@ -49,22 +49,16 @@ class ClientUpdate(object):
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = LeNet5().to(device)
             clients_net = [LeNet5().to(device) for _ in range(self.args.num_clients)]
-        elif self.args.model == 'cnn' and (self.args.dataset == 'mnist' or self.args.dataset == 'mnist_rate'):
+        elif self.args.model == 'cnn' and (self.args.dataset == 'mnist_LDA' or self.args.dataset == 'mnist_rate'):
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = CNNMnist().to(device)
             clients_net = [CNNMnist().to(device) for _ in range(self.args.num_clients)]
-
-        elif self.args.model == 'cnn' and self.args.dataset == 'cifar_LDA':
-            print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
-            global_net = CNNCifar().to(device)
-            clients_net = [CNNCifar().to(device) for _ in range(self.args.num_clients)]
-
         elif self.args.model == 'mobilenet' and (self.args.dataset == 'cifar100_rate' or self.args.dataset == 'cifar100_LDA'):
             print('-----model:{}   dataset:{}'.format(self.args.model, self.args.dataset))
             global_net = MobileNetV2(num_classes=self.args.num_classes).to(device)
             clients_net = [MobileNetV2(num_classes=self.args.num_classes).to(device) for _ in range(self.args.num_clients)]
         else:
-            exit("Error: no model")
+            exit("Error: Clients -- get_model() --- no model")
 
 
         for model in clients_net:
@@ -92,7 +86,7 @@ class ClientUpdate(object):
             global_net = MOONMobileNetV2().to(device)
             clients_net = [MOONMobileNetV2().to(device) for _ in range(self.args.num_clients)]
         else:
-            exit("Error: no model")
+            exit("Error: Clients -- get_moon_model -- no model")
 
 
         for model in clients_net:
@@ -321,23 +315,5 @@ class ClientUpdate(object):
         accuracy = correct / len(test_loader.dataset)
         return test_loss, accuracy
 
-    def split_data(self, index):
-        data_set = GetDataSet(self.args)
-        train_dict = data_set.train_dict[index]
-        train_data = data_set.train_data
-
-        train_dict = list(train_dict)
-        client_split = Subset(train_data, train_dict)
-        client_loader = DataLoader(client_split, batch_size=self.args.train_bs, shuffle=True)
-        return client_loader
-
-    def shake_split_data(self, index):
-        data_set = GetDataSet(self.args)
-        train_dict = data_set.train_dict[index]
-        train_dict = list(train_dict)
-
-        client_loader = DataLoader(DatasetSplit(data_set.train, train_dict), batch_size=self.args.train_bs,
-                                   shuffle=True)
-        return client_loader
 
 
