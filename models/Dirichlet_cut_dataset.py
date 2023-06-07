@@ -31,62 +31,6 @@ def dirichlet_split_noniid(train_labels, alpha, n_clients):
 
 
 
-def rate_cut(self):
-    num_classes = 10
-    print('self.train_size:', self.train_size)
-    train_labels = torch.LongTensor(self.train_data.targets)
-    print('train_labels=====', train_labels)
-    target_labels_split = []
-    target_labels = torch.stack([train_labels == i for i in range(num_classes)])
-    target_labels_index = []
-    rand_labels_index = []
-    last_labels_index = set()
-    rate = float(1 / num_classes)
-    for j in range(num_classes):
-        idx = torch.where(target_labels[j])[0]
-        target_labels_index.append(idx)
-
-
-
-        batch_size = int(self.train_size * rate * args.rate)
-        rand_set_index = set(np.random.choice(target_labels_index[j], size=batch_size, replace=False))
-        last_set_index = rand_set_index.symmetric_difference(target_labels_index[j].numpy())
-        rand_labels_index.append(rand_set_index)
-        last_labels_index = last_labels_index.union(last_set_index)
-
-
-    last_labels_index = list(last_labels_index)
-    np.random.shuffle(last_labels_index)
-    last_labels_index = torch.LongTensor(last_labels_index)
-
-    last_size = round(self.train_size * rate * (1 - args.rate))
-
-    last_index = torch.split(last_labels_index, last_size)
-
-    for i in range(num_classes):
-
-
-        rand_labels_index[i] = torch.LongTensor(list(rand_labels_index[i]))
-        rand_size = int(self.train_size * args.rate / args.num_clients)
-        last_size = round(self.train_size * (1 - args.rate) / args.num_clients)
-
-        rand_labels_split = torch.split(rand_labels_index[i], rand_size)
-        last_labels_split = torch.split(last_index[i], last_size)
-
-
-        # 10 = num_clients / num_classes = 50 / 5
-        one_class_num = int(args.num_clients / num_classes)
-        for j in range(one_class_num):
-            target = torch.cat([rand_labels_split[j], last_labels_split[j]], dim=0)
-
-            target_labels_split.append(target)
-            # print('idx', target)
-
-
-
-    train_split = [Subset(self.train_data, x) for x in target_labels_split]
-    self.train_loader = [DataLoader(x, batch_size=args.train_bs, shuffle=True) for x in train_split]
-
 
 if __name__ == "__main__":
     args = args_parser()
