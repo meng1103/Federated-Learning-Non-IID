@@ -5,7 +5,7 @@ def args_parser():
     parser = argparse.ArgumentParser()
     # federated argument
 
-    parser.add_argument('--FL', type=str, default='fedavg', help="FL name  fedavg/moon/fedprox/scaffold/feddyn")
+    parser.add_argument('--FL_name', type=str, default='fedavg', help="FL name  fedavg/moon/fedprox/scaffold/feddyn")
     parser.add_argument('--test_bs', type=int, default=64, help="test batch_size")
     parser.add_argument('--lr', type=float, default=0.001, help="learning_rate")
     parser.add_argument('--lr_decay', type=float, default=0.995, help="learning_rate_decay")
