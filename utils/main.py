@@ -18,13 +18,13 @@ if __name__ == '__main__':
     FL = ClientUpdate(args)
     getdata = GetDataSet(args)
 
-    if args.FL == 'fedavg':
+    if args.FL_name == 'fedavg':
         fedavg(args, FL, getdata)
-    elif args.FL == 'fedprox':
+    elif args.FL_name == 'fedprox':
         fedprox(args, FL, getdata)
-    elif args.FL == 'feddyn':
+    elif args.FL_name == 'feddyn':
         feddyn(args, FL, getdata)
-    elif args.FL == 'moon':
+    elif args.FL_name == 'moon':
         MOON(args, FL, getdata)
-    elif args.FL == 'scaffold':
+    elif args.FL_name == 'scaffold':
         scaffold(args, FL, getdata)
