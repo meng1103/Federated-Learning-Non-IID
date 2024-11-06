@@ -314,6 +314,24 @@ class ClientUpdate(object):
         test_loss /= len(test_loader.dataset)
         accuracy = correct / len(test_loader.dataset)
         return test_loss, accuracy
+        
+    def split_data(self, index):
+        data_set = GetDataSet(self.args)
+        train_dict = data_set.train_dict[index]  # get client index
+        train_data = data_set.train_data  # get train_data
 
+        train_dict = list(train_dict)
+        client_split = Subset(train_data, train_dict)
+        client_loader = DataLoader(client_split, batch_size=self.args.train_bs, shuffle=True)
+        return client_loader
+
+    def shake_split_data(self, index):
+        data_set = GetDataSet(self.args)
+        train_dict = data_set.train_dict[index]
+        train_dict = list(train_dict)
+
+        client_loader = DataLoader(DatasetSplit(data_set.train, train_dict), batch_size=self.args.train_bs,
+                                   shuffle=True)
+        return client_loader
 
 
